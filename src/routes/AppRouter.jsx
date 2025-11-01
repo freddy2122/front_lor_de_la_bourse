@@ -36,6 +36,7 @@ import AdminArticlesPage from '../pages/admin/AdminArticlesPage';
 import DemandeSoumisePage from '../pages/DemandeSoumisePage';
 import UnauthorizedPage from '../pages/UnauthorizedPage';
 import Logout from '../pages/Logout';
+import PlaceholderPage from '../pages/PlaceholderPage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -67,6 +68,46 @@ const AppRouter = () => {
                     <Route path="apprendre" element={<ApprendrePage />} />
                     <Route path="apprendre/:articleId" element={<ArticleDetailPage />} />
                     <Route path="action/:ticker" element={<ActionDetailPage />} />
+                    <Route path="marches/publications-officielles" element={<PlaceholderPage title="Marchés - Publications officielles" />} />
+                    <Route path="marches/actualites" element={<PlaceholderPage title="Marchés - Actualités" />} />
+                    <Route path="marches/actions" element={<PlaceholderPage title="Marchés - Actions" />} />
+                    <Route path="marches/indices" element={<PlaceholderPage title="Marchés - Indices" />} />
+                    <Route path="marches/palmares-hebdomadaires" element={<PlaceholderPage title="Marchés - Palmarès hebdomadaires" />} />
+                    <Route path="analyses/analyse-graphique" element={<PlaceholderPage title="Analyses - Analyse graphique" />} />
+                    <Route path="analyses/analyse-technique" element={<PlaceholderPage title="Analyses - Analyse technique" />} />
+                    <Route path="analyses/dividendes" element={<PlaceholderPage title="Analyses - Dividendes" />} />
+                    <Route path="analyses/comparaisons" element={<PlaceholderPage title="Analyses - Comparaisons" />} />
+                    <Route path="analyses/indices-boursiers" element={<PlaceholderPage title="Analyses - Indices boursiers" />} />
+                    <Route path="analyses/previsions-boursieres" element={<PlaceholderPage title="Analyses - Prévisions boursières" />} />
+                    <Route path="analyses/notations-financieres" element={<PlaceholderPage title="Analyses - Notations financières" />} />
+                    <Route path="analyses/autres-outils-analyse" element={<PlaceholderPage title="Analyses - Autres outils d'analyse" />} />
+                    <Route path="apprendre/articles" element={<PlaceholderPage title="Apprendre - Articles" />} />
+                    <Route path="apprendre/guide" element={<PlaceholderPage title="Apprendre - Guide" />} />
+                    <Route path="apprendre/quiz" element={<PlaceholderPage title="Apprendre - Quiz" />} />
+                    <Route path="apprendre/lexique" element={<PlaceholderPage title="Apprendre - Lexique" />} />
+                    <Route path="apprendre/liste-sgi" element={<PlaceholderPage title="Apprendre - Liste et tarifs des SGI" />} />
+                    <Route path="apprendre/liste-societes" element={<PlaceholderPage title="Apprendre - Liste des sociétés cotées" />} />
+                    <Route path="apprendre/liste-formateurs" element={<PlaceholderPage title="Apprendre - Liste des formateurs en bourse" />} />
+                    <Route path="portefeuille-virtuel/presentation" element={<PlaceholderPage title="Portefeuille virtuel - Présentation" />} />
+                    <Route path="portefeuille-virtuel/especes-et-titres" element={<PlaceholderPage title="Portefeuille virtuel - Espèces et titres" />} />
+                    <Route path="portefeuille-virtuel/detection-erreurs" element={<PlaceholderPage title="Portefeuille virtuel - Détection des erreurs" />} />
+                    <Route path="portefeuille-virtuel/analyse-portefeuille" element={<PlaceholderPage title="Portefeuille virtuel - Analyse du portefeuille" />} />
+                    <Route path="portefeuille-virtuel/autres-donnees" element={<PlaceholderPage title="Portefeuille virtuel - Autres données du portefeuille" />} />
+                    <Route path="outils/recommandations" element={<PlaceholderPage title="Outils - Recommandations" />} />
+                    <Route path="outils/journee-de-cotation" element={<PlaceholderPage title="Outils - Journée de cotation" />} />
+                    <Route path="outils/filtrages-societes" element={<PlaceholderPage title="Outils - Filtrages des sociétés" />} />
+                    <Route path="outils/classements-societes" element={<PlaceholderPage title="Outils - Classements des sociétés" />} />
+                    <Route path="outils/comparaisons-societes" element={<PlaceholderPage title="Outils - Comparaisons des sociétés" />} />
+                    <Route path="outils/alertes-franchissement-seuil" element={<PlaceholderPage title="Outils - Alertes franchissement de seuil" />} />
+                    <Route path="outils/alertes-publications-officielles" element={<PlaceholderPage title="Outils - Alertes publications officielles" />} />
+                    <Route path="outils/autres-outils-analyse" element={<PlaceholderPage title="Outils - Autres outils d'analyse" />} />
+                    <Route path="donnees/dividendes-historiques" element={<PlaceholderPage title="Données - Dividendes historiques" />} />
+                    <Route path="donnees/rapports-activite" element={<PlaceholderPage title="Données - Rapports d'activité" />} />
+                    <Route path="donnees/ratios-par-societe" element={<PlaceholderPage title="Données - Ratios par société (PER, ROE, ...)" />} />
+                    <Route path="donnees/ratios-par-secteur" element={<PlaceholderPage title="Données - Ratios par secteur (PER, PBR)" />} />
+                    <Route path="forum" element={<PlaceholderPage title="Forum" />} />
+                    <Route path="premium" element={<PlaceholderPage title="Premium" />} />
+                    <Route path="rechercher" element={<PlaceholderPage title="Rechercher" />} />
                 </Route>
 
                 {/* --- GROUPE 2 : Auth --- */}
