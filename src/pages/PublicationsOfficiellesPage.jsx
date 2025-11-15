@@ -127,7 +127,7 @@ const PublicationsOfficiellesPage = () => {
       pollId = setInterval(() => {
         if (stopped || page !== 1) return;
         refresh();
-      }, 15000);
+      }, 5000);
     };
 
     if (API_BASE_URL) {
