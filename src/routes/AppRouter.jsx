@@ -29,6 +29,7 @@ import UnauthorizedPage from '../pages/UnauthorizedPage';
 import Logout from '../pages/Logout';
 import PlaceholderPage from '../pages/PlaceholderPage';
 import PublicationsOfficiellesPage from '../pages/PublicationsOfficiellesPage';
+import ActualitesPage from '../pages/ActualitesPage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -52,7 +53,7 @@ const AppRouter = () => {
                     <Route path="contact" element={<ContactPage />} />
                     <Route path="action/:ticker" element={<ActionDetailPage />} />
                     <Route path="marches/publications-officielles" element={<PublicationsOfficiellesPage />} />
-                    <Route path="marches/actualites" element={<PlaceholderPage title="Marchés - Actualités" />} />
+                    <Route path="marches/actualites" element={<ActualitesPage />} />
                     <Route path="marches/actions" element={<PlaceholderPage title="Marchés - Actions" />} />
                     <Route path="marches/indices" element={<PlaceholderPage title="Marchés - Indices" />} />
                     <Route path="marches/palmares-hebdomadaires" element={<PlaceholderPage title="Marchés - Palmarès hebdomadaires" />} />
