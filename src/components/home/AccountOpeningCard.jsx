@@ -24,7 +24,7 @@ const AccountOpeningCard = () => {
           Devenez investisseur chez L'Or de la Bourse.
         </p>
         <NavLink 
-          to="/ouvrir-compte" // ou une future page "/inscription"
+          to="/inscription" // ou une future page "/inscription"
           className="inline-flex items-center bg-brand-gold text-brand-blue font-bold py-2 px-5 rounded-full hover:bg-opacity-90 transition-all"
         >
           <UserPlus size={20} className="mr-2" />

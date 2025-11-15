@@ -46,7 +46,7 @@ const HomePage = () => {
                             <ArrowRight className="ml-2" size={20} />
                         </NavLink>
                         <NavLink
-                            to="/services"
+                            to="/premium"
                             className="w-full sm:w-auto font-semibold py-3 px-8 rounded-full text-lg border-2 border-white hover:bg-white hover:text-brand-blue transition-colors duration-300"
                         >
                             Découvrir nos services
@@ -85,7 +85,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Nos Services SGI */}
+            {/* Nos Services */}
             <ServicesSection />
 
             {/* App mobile / Onboarding KYC */}

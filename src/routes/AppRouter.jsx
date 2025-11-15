@@ -12,16 +12,7 @@ import AdminDashboardLayout from '../components/dashboard_layout/AdminDashboardL
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 import InscriptionPage from '../pages/InscriptionPage';
-import ServicesPage from '../pages/ServicesPage';
-import MarchePage from '../pages/MarchePage';
-import AnalysesPage from '../pages/AnalysesPage';
 import ContactPage from '../pages/ContactPage';
-import OuvrirComptePage from '../pages/OuvrirComptePage';
-import EntreprisesPage from '../pages/EntreprisesPage';
-import TarifsPage from '../pages/TarifsPage';
-import AProposPage from '../pages/AProposPage';
-import ApprendrePage from '../pages/ApprendrePage';
-import ArticleDetailPage from '../pages/ArticleDetailPage';
 import ActionDetailPage from '../pages/ActionDetailPage';
 import DashboardPage from '../pages/DashboardPage';
 import PortefeuillePage from '../pages/PortefeuillePage';
@@ -37,6 +28,7 @@ import DemandeSoumisePage from '../pages/DemandeSoumisePage';
 import UnauthorizedPage from '../pages/UnauthorizedPage';
 import Logout from '../pages/Logout';
 import PlaceholderPage from '../pages/PlaceholderPage';
+import PublicationsOfficiellesPage from '../pages/PublicationsOfficiellesPage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -57,18 +49,9 @@ const AppRouter = () => {
                 {/* --- GROUPE 1 : Routes Publiques --- */}
                 <Route path="/" element={<MainLayout />}>
                     <Route index element={<HomePage />} />
-                    <Route path="services" element={<ServicesPage />} />
-                    <Route path="marche" element={<MarchePage />} />
-                    <Route path="analyses" element={<AnalysesPage />} />
                     <Route path="contact" element={<ContactPage />} />
-                    <Route path="ouvrir-compte" element={<OuvrirComptePage />} />
-                    <Route path="entreprises" element={<EntreprisesPage />} />
-                    <Route path="tarifs" element={<TarifsPage />} />
-                    <Route path="a-propos" element={<AProposPage />} />
-                    <Route path="apprendre" element={<ApprendrePage />} />
-                    <Route path="apprendre/:articleId" element={<ArticleDetailPage />} />
                     <Route path="action/:ticker" element={<ActionDetailPage />} />
-                    <Route path="marches/publications-officielles" element={<PlaceholderPage title="Marchés - Publications officielles" />} />
+                    <Route path="marches/publications-officielles" element={<PublicationsOfficiellesPage />} />
                     <Route path="marches/actualites" element={<PlaceholderPage title="Marchés - Actualités" />} />
                     <Route path="marches/actions" element={<PlaceholderPage title="Marchés - Actions" />} />
                     <Route path="marches/indices" element={<PlaceholderPage title="Marchés - Indices" />} />
@@ -85,7 +68,7 @@ const AppRouter = () => {
                     <Route path="apprendre/guide" element={<PlaceholderPage title="Apprendre - Guide" />} />
                     <Route path="apprendre/quiz" element={<PlaceholderPage title="Apprendre - Quiz" />} />
                     <Route path="apprendre/lexique" element={<PlaceholderPage title="Apprendre - Lexique" />} />
-                    <Route path="apprendre/liste-sgi" element={<PlaceholderPage title="Apprendre - Liste et tarifs des SGI" />} />
+                    <Route path="apprendre/intermediaires-tarifs" element={<PlaceholderPage title="Apprendre - Intermédiaires & tarifs" />} />
                     <Route path="apprendre/liste-societes" element={<PlaceholderPage title="Apprendre - Liste des sociétés cotées" />} />
                     <Route path="apprendre/liste-formateurs" element={<PlaceholderPage title="Apprendre - Liste des formateurs en bourse" />} />
                     <Route path="portefeuille-virtuel/presentation" element={<PlaceholderPage title="Portefeuille virtuel - Présentation" />} />

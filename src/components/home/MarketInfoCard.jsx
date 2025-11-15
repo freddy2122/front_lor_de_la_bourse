@@ -64,7 +64,7 @@ const MarketInfoCard = () => {
         </div>
       )}
 
-      <NavLink to="/marche" className="font-bold text-brand-gold hover:underline">
+      <NavLink to="/marches/actions" className="font-bold text-brand-gold hover:underline">
         Voir tous les cours →
       </NavLink>
     </div>

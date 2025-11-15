@@ -39,9 +39,9 @@ const Footer = () => {
             <FooterSectionTitle>Navigation</FooterSectionTitle>
             <ul className="space-y-3">
               <li><FooterLink to="/">Accueil</FooterLink></li>
-              <li><FooterLink to="/services">Nos Services</FooterLink></li>
-              <li><FooterLink to="/marche">Le Marché en Direct</FooterLink></li>
-              <li><FooterLink to="/analyses">Actualité & Analyse</FooterLink></li>
+              <li><FooterLink to="/premium">Nos Services</FooterLink></li>
+              <li><FooterLink to="/marches/actions">Le Marché en Direct</FooterLink></li>
+              <li><FooterLink to="/analyses/analyse-technique">Actualité & Analyse</FooterLink></li>
             </ul>
           </div>
 
@@ -49,10 +49,9 @@ const Footer = () => {
           <div>
             <FooterSectionTitle>L'Entreprise</FooterSectionTitle> {/* On peut renommer la section */}
             <ul className="space-y-3">
-              <li><FooterLink to="/a-propos">À Propos de nous</FooterLink></li> {/* <-- LIEN AJOUTÉ */}
-              <li><FooterLink to="/tarifs">Nos Tarifs</FooterLink></li> {/* <-- LIEN AJOUTÉ */}
+              <li><FooterLink to="/">À Propos de nous</FooterLink></li> {/* <-- LIEN AJOUTÉ */}
+              <li><FooterLink to="/apprendre/intermediaires-tarifs">Nos Tarifs</FooterLink></li> {/* <-- LIEN AJOUTÉ */}
               <li><FooterLink to="/contact">Nous Contacter</FooterLink></li>
-              <li><FooterLink to="/faq">FAQ</FooterLink></li>
             </ul>
           </div>
 

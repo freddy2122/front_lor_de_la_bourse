@@ -4,7 +4,7 @@ import { navigateTo } from '../routes/navigation';
 // Instance Axios globale
 const apiClient = axios.create({
   // Utilise la variable d'env VITE_API_BASE_URL (définie dans .env.*) avec repli sur l'URL locale
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://192.168.1.125:8001/api', // ✅ point d'entrée unique de l’API
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api', // ✅ point d'entrée unique de l’API
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

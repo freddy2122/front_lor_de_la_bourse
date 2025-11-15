@@ -65,7 +65,7 @@ const DesktopMenu = () => {
             <NavLink to="/apprendre/guide" className={item}>Guide</NavLink>
             <NavLink to="/apprendre/quiz" className={item}>Quiz</NavLink>
             <NavLink to="/apprendre/lexique" className={item}>Lexique</NavLink>
-            <NavLink to="/apprendre/liste-sgi" className={item}>Liste et tarifs des SGI</NavLink>
+            <NavLink to="/apprendre/intermediaires-tarifs" className={item}>Intermédiaires & tarifs</NavLink>
             <NavLink to="/apprendre/liste-societes" className={item}>Liste des sociétés cotées</NavLink>
             <NavLink to="/apprendre/liste-formateurs" className={item}>Liste des formateurs en bourse</NavLink>
           </div>
@@ -193,7 +193,7 @@ const MobileMenu = ({ isOpen, setIsOpen }) => {
           ['/apprendre/guide', 'Guide'],
           ['/apprendre/quiz', 'Quiz'],
           ['/apprendre/lexique', 'Lexique'],
-          ['/apprendre/liste-sgi', 'Liste et tarifs des SGI'],
+          ['/apprendre/intermediaires-tarifs', 'Intermédiaires & tarifs'],
           ['/apprendre/liste-societes', 'Liste des sociétés cotées'],
           ['/apprendre/liste-formateurs', 'Liste des formateurs en bourse'],
         ])}
