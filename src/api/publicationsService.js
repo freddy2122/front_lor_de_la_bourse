@@ -1,9 +1,38 @@
 import apiClient from './apiClient';
 
+function toISODate(raw) {
+  if (!raw) return '';
+  if (raw instanceof Date) return raw.toISOString().slice(0, 10);
+  if (typeof raw === 'number') return new Date(raw).toISOString().slice(0, 10);
+  if (typeof raw === 'string') {
+    const s = raw.trim();
+    // ISO-like: 2025-11-10 or 2025/11/10
+    let m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);
+    if (m) {
+      const y = m[1].padStart(4, '0');
+      const mo = m[2].padStart(2, '0');
+      const d = m[3].padStart(2, '0');
+      return `${y}-${mo}-${d}`;
+    }
+    // European: 10/11/2025 or 10-11-2025
+    m = s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/);
+    if (m) {
+      const d = m[1].padStart(2, '0');
+      const mo = m[2].padStart(2, '0');
+      const y = m[3].padStart(4, '0');
+      return `${y}-${mo}-${d}`;
+    }
+    // Try Date.parse fallback
+    const t = Date.parse(s);
+    if (!isNaN(t)) return new Date(t).toISOString().slice(0, 10);
+  }
+  return '';
+}
+
 function normalizePublication(it) {
   const id = it.id ?? it.uuid ?? it._id ?? `${(it.company || it.company_name || it.issuer || 'pub')}-${(it.published_at || it.date || it.created_at || '')}`;
   const rawDate = it.date || it.published_at || it.created_at || it.updated_at || '';
-  const date = typeof rawDate === 'string' ? rawDate.slice(0, 10) : new Date(rawDate).toISOString().slice(0, 10);
+  const date = toISODate(rawDate);
   const company = it.company || it.company_name || it.issuer || it.issuer_name || it.symbol || '';
   const title = it.title || it.name || it.subject || it.headline || '';
   const type = it.type || it.category || it.kind || '';
@@ -20,33 +49,115 @@ function paginate(list, page, per_page) {
   return { data, meta: { page: p, per_page, total, last_page } };
 }
 
+function applyFilters(list, { q = '', symbol = '', type = '', from = '', to = '' }) {
+  let filtered = [...list];
+  if (q) {
+    const k = q.toLowerCase();
+    filtered = filtered.filter((i) => (i.title || '').toLowerCase().includes(k) || (i.company || '').toLowerCase().includes(k));
+  }
+  if (symbol) {
+    const s = symbol.toLowerCase();
+    filtered = filtered.filter((i) => (i.company || '').toLowerCase().includes(s));
+  }
+  if (type) {
+    filtered = filtered.filter((i) => (i.type || '').toLowerCase() === type.toLowerCase());
+  }
+  if (from) {
+    filtered = filtered.filter((i) => (i.date || '') >= from);
+  }
+  if (to) {
+    filtered = filtered.filter((i) => (i.date || '') <= to);
+  }
+  return filtered;
+}
+
+async function fetchRichBourseIndexPages({ pages = 1 } = {}) {
+  const all = [];
+  for (let p = 1; p <= Math.max(1, pages); p++) {
+    const url = p === 1
+      ? `https://r.jina.ai/http://www.richbourse.com/common/actualite/index`
+      : `https://r.jina.ai/http://www.richbourse.com/common/actualite/index?page=${p}`;
+    try {
+      const res = await fetch(url, { credentials: 'omit' });
+      const txt = await res.text();
+      // Chercher les lignes Markdown [Titre](URL)
+      const re = /\[([^\]]+?)\]\((https?:\/\/www\.richbourse\.com\/common\/actualite\/details\/[^)]+)\)/g;
+      let m;
+      while ((m = re.exec(txt))) {
+        const fullTitle = (m[1] || '').trim();
+        const link = m[2];
+        const dm = link.match(/\/details\/(\d{2})-(\d{2})-(\d{4})-/);
+        const date = dm ? `${dm[3]}-${dm[2]}-${dm[1]}` : '';
+        const parts = fullTitle.split(' : ');
+        const company = (parts[0] || '').trim();
+        const rest = (parts.slice(1).join(' : ') || '').trim();
+        const title = rest || fullTitle;
+        let kind = '';
+        const low = title.toLowerCase();
+        if (low.includes('rapport')) kind = 'rapport';
+        else if (low.includes('avis')) kind = 'avis';
+        else if (low.includes('dividende')) kind = 'dividende';
+        else if (low.includes('communiqué')) kind = 'avis';
+
+        all.push({
+          id: link,
+          date,
+          company,
+          title,
+          type: kind,
+          pdf_url: link,
+        });
+      }
+    } catch (_) {}
+  }
+  // Dédupliquer par id
+  const uniq = [];
+  const seen = new Set();
+  for (const it of all) {
+    if (!seen.has(it.id)) {
+      seen.add(it.id);
+      uniq.push(it);
+    }
+  }
+  return uniq;
+}
+
 export async function fetchOfficialPublications({ q = '', symbol = '', type = '', from = '', to = '', page = 1, per_page = 10 } = {}) {
+  let primary = [];
   try {
     const res = await apiClient.get('/market/official-publications', {
       params: { q, symbol, type, from, to, page, per_page },
     });
     const body = res?.data;
     if (Array.isArray(body)) {
-      const mapped = body.map(normalizePublication);
-      return paginate(mapped, page, per_page);
+      primary = body.map(normalizePublication);
+    } else if (body && Array.isArray(body.data)) {
+      primary = body.data.map(normalizePublication);
+    } else if (body && body.items && Array.isArray(body.items)) {
+      primary = body.items.map(normalizePublication);
+    } else {
+      const arr = Object.values(body || {}).filter((v) => typeof v === 'object' && v);
+      if (arr.length && Array.isArray(arr[0])) {
+        primary = arr[0].map(normalizePublication);
+      }
     }
-    if (body && Array.isArray(body.data)) {
-      const mapped = body.data.map(normalizePublication);
-      return { data: mapped, meta: body.meta || { page, per_page, total: mapped.length, last_page: Math.max(1, Math.ceil(mapped.length / per_page)) } };
+  } catch (_) {}
+
+  // Fallback RichBourse si aucune donnée ou si le fallback est plus récent
+  try {
+    // Récupérer 1 à 2 pages pour couvrir la dernière semaine
+    const rb = await fetchRichBourseIndexPages({ pages: 2 });
+    const filteredRb = applyFilters(rb, { q, symbol, type, from, to });
+    const latestRb = filteredRb.reduce((max, it) => (it.date > max ? it.date : max), '');
+    const latestPrimary = primary.reduce((max, it) => (it.date > max ? it.date : max), '');
+    if (filteredRb.length && (!primary.length || latestRb > latestPrimary)) {
+      const paged = paginate(filteredRb, page, per_page);
+      return paged;
     }
-    if (body && body.items && Array.isArray(body.items)) {
-      const mapped = body.items.map(normalizePublication);
-      return { data: mapped, meta: body.meta || { page, per_page, total: mapped.length, last_page: Math.max(1, Math.ceil(mapped.length / per_page)) } };
-    }
-    const arr = Object.values(body || {}).filter((v) => typeof v === 'object' && v);
-    if (arr.length && Array.isArray(arr[0])) {
-      const mapped = arr[0].map(normalizePublication);
-      return paginate(mapped, page, per_page);
-    }
-    return { data: [], meta: { page, per_page, total: 0, last_page: 1 } };
-  } catch (_e) {
-    return { data: [], meta: { page, per_page, total: 0, last_page: 1 } };
-  }
+  } catch (_) {}
+
+  const filtered = applyFilters(primary, { q, symbol, type, from, to });
+  return paginate(filtered, page, per_page);
 }
 
 export default { fetchOfficialPublications };
