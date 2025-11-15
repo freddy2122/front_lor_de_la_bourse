@@ -2,9 +2,17 @@ import axios from 'axios';
 import { navigateTo } from '../routes/navigation';
 
 // Instance Axios globale
+let resolvedBase = import.meta.env.VITE_API_BASE_URL;
+if (!resolvedBase) {
+  if (import.meta.env.PROD && typeof window !== 'undefined' && window.location) {
+    resolvedBase = '/api'; // ✅ Vercel Functions en production
+  } else {
+    resolvedBase = 'http://localhost:8000/api'; // ✅ backend local en dev
+  }
+}
+
 const apiClient = axios.create({
-  // Utilise la variable d'env VITE_API_BASE_URL (définie dans .env.*) avec repli sur l'URL locale
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api', // ✅ point d'entrée unique de l’API
+  baseURL: resolvedBase,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
