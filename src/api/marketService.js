@@ -2,6 +2,7 @@
 // Configure via VITE_MARKET_API_BASE and VITE_MARKET_API_KEY
 
 import axios from 'axios';
+import apiClient from './apiClient';
 
 const BASE = import.meta.env.VITE_MARKET_API_BASE || '';
 const KEY = import.meta.env.VITE_MARKET_API_KEY || '';
@@ -12,16 +13,14 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 // Note: BRVM coverage may not be available; we use fallback when missing.
 
 export async function fetchTopMovers({ symbols = [] } = {}) {
-  // Try backend proxy first if available
-  if (API_BASE_URL) {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/market/top-movers`, {
-        params: symbols.length ? { symbols: symbols.join(',') } : {},
-      });
-      if (Array.isArray(res.data)) return res.data;
-    } catch (_) {
-      // fall through to direct provider/mock
-    }
+  // Try backend proxy first
+  try {
+    const res = await apiClient.get('/market/top-movers', {
+      params: symbols.length ? { symbols: symbols.join(',') } : {},
+    });
+    if (Array.isArray(res.data)) return res.data;
+  } catch (_) {
+    // fall through to direct provider/mock
   }
 
   // If no provider configured, return mock
@@ -63,12 +62,10 @@ export async function fetchTopMovers({ symbols = [] } = {}) {
 // Simple indices fetcher (mock for now). Replace with BRVM indices when available.
 export async function fetchIndices() {
   // Try backend proxy first
-  if (API_BASE_URL) {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/market/indices`);
-      if (Array.isArray(res.data)) return res.data;
-    } catch (_) {}
-  }
+  try {
+    const res = await apiClient.get('/market/indices');
+    if (Array.isArray(res.data)) return res.data;
+  } catch (_) {}
   // Fallback to mock (global providers usually don’t have BRVM)
   return [
     { symbol: 'BRVM-Composite', name: 'BRVM Composite', changePct: 0.52 },
@@ -78,14 +75,12 @@ export async function fetchIndices() {
 }
 
 export async function fetchQuotesList({ symbols = [] } = {}) {
-  if (API_BASE_URL) {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/market/quotes-list`, {
-        params: symbols.length ? { symbols: symbols.join(',') } : {},
-      });
-      if (Array.isArray(res.data)) return res.data;
-    } catch (_) {}
-  }
+  try {
+    const res = await apiClient.get('/market/quotes-list', {
+      params: symbols.length ? { symbols: symbols.join(',') } : {},
+    });
+    if (Array.isArray(res.data)) return res.data;
+  } catch (_) {}
   // Fallback to mock data similar to backend
   return [
     { ticker: 'SONATEL', name: 'Sonatel', price: 17500, change: 1.45, volume: 120500 },
@@ -100,7 +95,10 @@ export async function fetchQuotesList({ symbols = [] } = {}) {
 
 // Résumé marché (Activités du marché) — backend: GET /api/market/summary
 export async function fetchMarketSummary() {
-  if (!API_BASE_URL) {
+  try {
+    const res = await apiClient.get('/market/summary');
+    return res.data;
+  } catch (_) {
     return {
       transactions_value_fcfa: null,
       cap_actions_fcfa: null,
@@ -109,25 +107,26 @@ export async function fetchMarketSummary() {
       last_update: null,
     };
   }
-  const res = await axios.get(`${API_BASE_URL}/market/summary`);
-  return res.data;
 }
 
 export default { fetchTopMovers, fetchIndices, fetchQuotesList, fetchMarketSummary };
 
 // --- Sociétés cotées ---
 export async function fetchCompanies({ q = '', sector = '', country = '', page = 1, per_page = 20 } = {}) {
-  if (!API_BASE_URL) return { data: [], meta: { page: 1, per_page: 20, total: 0, last_page: 1 } };
-  const res = await axios.get(`${API_BASE_URL}/market/companies`, {
-    params: { q, sector, country, page, per_page },
-  });
-  return res.data;
+  try {
+    const res = await apiClient.get('/market/companies', {
+      params: { q, sector, country, page, per_page },
+    });
+    return res.data;
+  } catch (_) {
+    return { data: [], meta: { page: 1, per_page: 20, total: 0, last_page: 1 } };
+  }
 }
 
 export async function fetchCompany(id) {
-  if (!API_BASE_URL || !id) return null;
+  if (!id) return null;
   try {
-    const res = await axios.get(`${API_BASE_URL}/market/companies/${id}`);
+    const res = await apiClient.get(`/market/companies/${id}`);
     return res.data;
   } catch (_) {
     return null;

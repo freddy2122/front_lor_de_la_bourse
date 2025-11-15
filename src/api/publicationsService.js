@@ -1,29 +1,14 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
-
-function applyFilters(list, { q = '', symbol = '', type = '', from = '', to = '' }) {
-  let filtered = [...list];
-  if (q) {
-    const k = q.toLowerCase();
-    filtered = filtered.filter(
-      (i) => i.title.toLowerCase().includes(k) || i.company.toLowerCase().includes(k)
-    );
-  }
-  if (symbol) {
-    const s = symbol.toLowerCase();
-    filtered = filtered.filter((i) => i.company.toLowerCase().includes(s));
-  }
-  if (type) {
-    filtered = filtered.filter((i) => i.type === type);
-  }
-  if (from) {
-    filtered = filtered.filter((i) => i.date >= from);
-  }
-  if (to) {
-    filtered = filtered.filter((i) => i.date <= to);
-  }
-  return filtered;
+function normalizePublication(it) {
+  const id = it.id ?? it.uuid ?? it._id ?? `${(it.company || it.company_name || it.issuer || 'pub')}-${(it.published_at || it.date || it.created_at || '')}`;
+  const rawDate = it.date || it.published_at || it.created_at || it.updated_at || '';
+  const date = typeof rawDate === 'string' ? rawDate.slice(0, 10) : new Date(rawDate).toISOString().slice(0, 10);
+  const company = it.company || it.company_name || it.issuer || it.issuer_name || it.symbol || '';
+  const title = it.title || it.name || it.subject || it.headline || '';
+  const type = it.type || it.category || it.kind || '';
+  const pdf_url = it.pdf_url || it.file_url || it.url || it.link || '#';
+  return { id, date, company, title, type, pdf_url };
 }
 
 function paginate(list, page, per_page) {
@@ -36,34 +21,32 @@ function paginate(list, page, per_page) {
 }
 
 export async function fetchOfficialPublications({ q = '', symbol = '', type = '', from = '', to = '', page = 1, per_page = 10 } = {}) {
-  if (API_BASE_URL) {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/market/official-publications`, {
-        params: { q, symbol, type, from, to, page, per_page },
-      });
-      if (Array.isArray(res.data)) {
-        return paginate(res.data, page, per_page);
-      }
-      if (res.data && res.data.data) {
-        return res.data;
-      }
-    } catch (_) {}
+  try {
+    const res = await apiClient.get('/market/official-publications', {
+      params: { q, symbol, type, from, to, page, per_page },
+    });
+    const body = res?.data;
+    if (Array.isArray(body)) {
+      const mapped = body.map(normalizePublication);
+      return paginate(mapped, page, per_page);
+    }
+    if (body && Array.isArray(body.data)) {
+      const mapped = body.data.map(normalizePublication);
+      return { data: mapped, meta: body.meta || { page, per_page, total: mapped.length, last_page: Math.max(1, Math.ceil(mapped.length / per_page)) } };
+    }
+    if (body && body.items && Array.isArray(body.items)) {
+      const mapped = body.items.map(normalizePublication);
+      return { data: mapped, meta: body.meta || { page, per_page, total: mapped.length, last_page: Math.max(1, Math.ceil(mapped.length / per_page)) } };
+    }
+    const arr = Object.values(body || {}).filter((v) => typeof v === 'object' && v);
+    if (arr.length && Array.isArray(arr[0])) {
+      const mapped = arr[0].map(normalizePublication);
+      return paginate(mapped, page, per_page);
+    }
+    return { data: [], meta: { page, per_page, total: 0, last_page: 1 } };
+  } catch (_e) {
+    return { data: [], meta: { page, per_page, total: 0, last_page: 1 } };
   }
-  const mock = [
-    { id: 1, date: '2025-11-05', company: 'SONATEL', title: "Communiqué de presse - Résultats T3 2025", type: 'rapport', pdf_url: '#' },
-    { id: 2, date: '2025-11-03', company: 'TOTAL CI', title: "Avis de convocation à l'AGM", type: 'avis', pdf_url: '#' },
-    { id: 3, date: '2025-10-28', company: 'ECOBANK', title: 'Annonce de dividende intérimaire', type: 'dividende', pdf_url: '#' },
-    { id: 4, date: '2025-10-20', company: 'BOA CI', title: 'Publication des résultats semestriels', type: 'rapport', pdf_url: '#' },
-    { id: 5, date: '2025-10-18', company: 'CORIS', title: "Avis de distribution de dividende", type: 'dividende', pdf_url: '#' },
-    { id: 6, date: '2025-10-12', company: 'ORAGROUP', title: 'Note d’information', type: 'avis', pdf_url: '#' },
-    { id: 7, date: '2025-10-09', company: 'SGCI', title: 'Rapport financier T2 2025', type: 'rapport', pdf_url: '#' },
-    { id: 8, date: '2025-10-01', company: 'UNILEVER CI', title: 'Annonce dividende', type: 'dividende', pdf_url: '#' },
-    { id: 9, date: '2025-09-25', company: "SAPH", title: 'Avis sur opération exceptionnelle', type: 'avis', pdf_url: '#' },
-    { id: 10, date: '2025-09-14', company: 'NESTLE CI', title: 'Rapport annuel 2024', type: 'rapport', pdf_url: '#' },
-    { id: 11, date: '2025-09-10', company: 'SICABLE', title: 'Convocation AGE', type: 'avis', pdf_url: '#' },
-  ];
-  const filtered = applyFilters(mock, { q, symbol, type, from, to });
-  return paginate(filtered, page, per_page);
 }
 
 export default { fetchOfficialPublications };

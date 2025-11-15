@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { fetchOfficialPublications } from '../api/publicationsService';
 import { fetchCompanies } from '../api/marketService';
 import { Skeleton } from '../components/common/Skeleton';
+import apiClient from '../api/apiClient';
 
 const typeOptions = [
   { value: '', label: 'Tous les types' },
@@ -28,6 +29,7 @@ const PublicationsOfficiellesPage = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [sort, setSort] = useState('date_desc');
   const refreshingRef = useRef(false);
+  const debounceRef = useRef(null);
 
   const params = useMemo(() => ({ q, symbol, type, from, to, page, per_page: perPage }), [q, symbol, type, from, to, page, perPage]);
 
@@ -87,7 +89,7 @@ const PublicationsOfficiellesPage = () => {
 
   useEffect(() => {
     if (page !== 1) return;
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+    const API_BASE_URL = (apiClient?.defaults?.baseURL || import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
     let es = null;
     let pollId = null;
     let stopped = false;
@@ -113,6 +115,13 @@ const PublicationsOfficiellesPage = () => {
       }
     };
 
+    const scheduleRefresh = () => {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        if (!stopped && page === 1) refresh();
+      }, 1200);
+    };
+
     const startPolling = () => {
       clearInterval(pollId);
       pollId = setInterval(() => {
@@ -123,11 +132,15 @@ const PublicationsOfficiellesPage = () => {
 
     if (API_BASE_URL) {
       try {
-        const streamUrl = `${API_BASE_URL.replace(/\/$/, '')}/market/official-publications/stream`;
+        let streamUrl = `${API_BASE_URL}/market/official-publications/stream`;
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) {
+          streamUrl += `?token=${encodeURIComponent(token)}`;
+        }
         es = new EventSource(streamUrl, { withCredentials: false });
         es.onmessage = () => {
           if (stopped) return;
-          refresh();
+          scheduleRefresh();
         };
         es.onerror = () => {
           try { es.close(); } catch {}
@@ -144,6 +157,7 @@ const PublicationsOfficiellesPage = () => {
       stopped = true;
       try { es && es.close(); } catch {}
       clearInterval(pollId);
+      clearTimeout(debounceRef.current);
     };
   }, [params, sort, page]);
 
