@@ -123,41 +123,80 @@ async function fetchRichBourseIndexPages({ pages = 1 } = {}) {
 }
 
 export async function fetchOfficialPublications({ q = '', symbol = '', type = '', from = '', to = '', page = 1, per_page = 10 } = {}) {
-  let primary = [];
-  try {
-    const res = await apiClient.get('/market/official-publications', {
-      params: { q, symbol, type, from, to, page, per_page },
-    });
-    const body = res?.data;
-    if (Array.isArray(body)) {
-      primary = body.map(normalizePublication);
-    } else if (body && Array.isArray(body.data)) {
-      primary = body.data.map(normalizePublication);
-    } else if (body && body.items && Array.isArray(body.items)) {
-      primary = body.items.map(normalizePublication);
-    } else {
-      const arr = Object.values(body || {}).filter((v) => typeof v === 'object' && v);
-      if (arr.length && Array.isArray(arr[0])) {
-        primary = arr[0].map(normalizePublication);
+  const SOURCE = (import.meta && import.meta.env && import.meta.env.VITE_PUBLICATIONS_SOURCE) || 'mock';
+  if (SOURCE === 'mock') {
+    const mock = [
+      { id: '11-11-2025-agl-acc-attestation', date: '2025-11-11', company: 'AFRICA GLOBAL LOGISTICS CI', title: "Attestation des Commissaires Aux Comptes - 1er semestre 2025", type: 'rapport', pdf_url: '#' },
+      { id: '11-11-2025-agl-rapport-s1', date: '2025-11-11', company: 'AFRICA GLOBAL LOGISTICS CI', title: "Rapport d'activités - 1er semestre 2025", type: 'rapport', pdf_url: '#' },
+      { id: '11-11-2025-total-sn-acc-rapport', date: '2025-11-11', company: 'TOTALENERGIES MARKETING SN', title: "Attestation CAC sur le Rapport d'activités - 1er semestre 2025", type: 'rapport', pdf_url: '#' },
+      { id: '11-11-2025-sonatel-transaction-dossier', date: '2025-11-11', company: 'SONATEL SN', title: 'Transaction Sur Dossier', type: 'avis', pdf_url: '#' },
+      { id: '10-11-2025-boa-ml-rapport-t3', date: '2025-11-10', company: 'BOA ML', title: "Rapport d'activités - 3ème trimestre 2025", type: 'rapport', pdf_url: '#' },
+      { id: '10-11-2025-homologation-sgi-tg', date: '2025-11-10', company: 'SGI TOGO', title: 'Homologation des tarifs', type: 'avis', pdf_url: '#' },
+      { id: '05-11-2025-nestle-acc-rapport-s1', date: '2025-11-05', company: 'NESTLE CI', title: "Attestation CAC sur le Rapport d'activités - 1er semestre 2025", type: 'rapport', pdf_url: '#' },
+      { id: '05-11-2025-sonatel-cp-t3', date: '2025-11-05', company: 'SONATEL', title: 'Communiqué de presse - Résultats T3 2025', type: 'rapport', pdf_url: '#' },
+    ];
+    const data = applyFilters(mock, { q, symbol, type, from, to });
+    return paginate(data, page, per_page);
+  }
+  const baseURL = (typeof apiClient !== 'undefined' && apiClient?.defaults?.baseURL) ? String(apiClient.defaults.baseURL) : '';
+  const host = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : '';
+  const isProdHost = !!(host && !/^localhost$|^127\.(?:\d+\.){2}\d+$/.test(host));
+  const isBackendLocalOrMissing = !baseURL || /^http:\/\/localhost(?::\d+)?\//i.test(baseURL);
+
+  // Prépare les promesses (concurrentes)
+  const primaryPromise = (async () => {
+    try {
+      const res = await apiClient.get('/market/official-publications', {
+        params: { q, symbol, type, from, to, page, per_page },
+      });
+      const body = res?.data;
+      let primary = [];
+      if (Array.isArray(body)) {
+        primary = body.map(normalizePublication);
+      } else if (body && Array.isArray(body.data)) {
+        primary = body.data.map(normalizePublication);
+      } else if (body && body.items && Array.isArray(body.items)) {
+        primary = body.items.map(normalizePublication);
+      } else {
+        const arr = Object.values(body || {}).filter((v) => typeof v === 'object' && v);
+        if (arr.length && Array.isArray(arr[0])) {
+          primary = arr[0].map(normalizePublication);
+        }
       }
+      return applyFilters(primary, { q, symbol, type, from, to });
+    } catch (_) {
+      return [];
     }
-  } catch (_) {}
+  })();
 
-  // Fallback RichBourse si aucune donnée ou si le fallback est plus récent
-  try {
-    // Récupérer 1 à 2 pages pour couvrir la dernière semaine
-    const rb = await fetchRichBourseIndexPages({ pages: 2 });
-    const filteredRb = applyFilters(rb, { q, symbol, type, from, to });
-    const latestRb = filteredRb.reduce((max, it) => (it.date > max ? it.date : max), '');
-    const latestPrimary = primary.reduce((max, it) => (it.date > max ? it.date : max), '');
-    if (filteredRb.length && (!primary.length || latestRb > latestPrimary)) {
-      const paged = paginate(filteredRb, page, per_page);
-      return paged;
+  const rbPromise = (async () => {
+    try {
+      const rb = await fetchRichBourseIndexPages({ pages: 2 });
+      return applyFilters(rb, { q, symbol, type, from, to });
+    } catch (_) {
+      return [];
     }
-  } catch (_) {}
+  })();
 
-  const filtered = applyFilters(primary, { q, symbol, type, from, to });
-  return paginate(filtered, page, per_page);
+  // En prod sans backend, privilégier le fallback immédiatement
+  if (isProdHost && isBackendLocalOrMissing) {
+    const rb = await rbPromise;
+    if (rb.length) return paginate(rb, page, per_page);
+    const primary = await primaryPromise;
+    return paginate(primary, page, per_page);
+  }
+
+  // Sinon, agréger et choisir le plus frais
+  const [prRes, rbRes] = await Promise.allSettled([primaryPromise, rbPromise]);
+  const primary = prRes.status === 'fulfilled' ? prRes.value : [];
+  const rb = rbRes.status === 'fulfilled' ? rbRes.value : [];
+  const latestRb = rb.reduce((max, it) => (it.date > max ? it.date : max), '');
+  const latestPrimary = primary.reduce((max, it) => (it.date > max ? it.date : max), '');
+
+  if (rb.length && (!primary.length || latestRb > latestPrimary)) {
+    return paginate(rb, page, per_page);
+  }
+  return paginate(primary, page, per_page);
 }
 
 export default { fetchOfficialPublications };
