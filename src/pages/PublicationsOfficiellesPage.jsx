@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { fetchOfficialPublications } from '../api/publicationsService';
 import { fetchCompanies } from '../api/marketService';
@@ -27,6 +27,7 @@ const PublicationsOfficiellesPage = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [sort, setSort] = useState('date_desc');
+  const refreshingRef = useRef(false);
 
   const params = useMemo(() => ({ q, symbol, type, from, to, page, per_page: perPage }), [q, symbol, type, from, to, page, perPage]);
 
@@ -83,6 +84,68 @@ const PublicationsOfficiellesPage = () => {
       controller.abort?.();
     };
   }, [symbolInput]);
+
+  useEffect(() => {
+    if (page !== 1) return;
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+    let es = null;
+    let pollId = null;
+    let stopped = false;
+
+    const refresh = async () => {
+      if (refreshingRef.current) return;
+      refreshingRef.current = true;
+      try {
+        const res = await fetchOfficialPublications(params);
+        if (stopped) return;
+        let data = res?.data ?? [];
+        if (sort === 'date_desc') {
+          data = [...data].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+        } else if (sort === 'date_asc') {
+          data = [...data].sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
+        }
+        const m = res?.meta ?? { page: 1, per_page: perPage, total: data.length, last_page: 1 };
+        setItems(data);
+        setMeta(m);
+      } catch (_e) {
+      } finally {
+        refreshingRef.current = false;
+      }
+    };
+
+    const startPolling = () => {
+      clearInterval(pollId);
+      pollId = setInterval(() => {
+        if (stopped || page !== 1) return;
+        refresh();
+      }, 15000);
+    };
+
+    if (API_BASE_URL) {
+      try {
+        const streamUrl = `${API_BASE_URL.replace(/\/$/, '')}/market/official-publications/stream`;
+        es = new EventSource(streamUrl, { withCredentials: false });
+        es.onmessage = () => {
+          if (stopped) return;
+          refresh();
+        };
+        es.onerror = () => {
+          try { es.close(); } catch {}
+          startPolling();
+        };
+      } catch (_e) {
+        startPolling();
+      }
+    } else {
+      startPolling();
+    }
+
+    return () => {
+      stopped = true;
+      try { es && es.close(); } catch {}
+      clearInterval(pollId);
+    };
+  }, [params, sort, page]);
 
   const onFilterChange = (fn) => (e) => {
     fn(e.target.value);
