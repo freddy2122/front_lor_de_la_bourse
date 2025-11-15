@@ -75,8 +75,8 @@ async function fetchRichBourseIndexPages({ pages = 1 } = {}) {
   const all = [];
   for (let p = 1; p <= Math.max(1, pages); p++) {
     const url = p === 1
-      ? `https://r.jina.ai/http://www.richbourse.com/common/actualite/index`
-      : `https://r.jina.ai/http://www.richbourse.com/common/actualite/index?page=${p}`;
+      ? `https://r.jina.ai/https://www.richbourse.com/common/actualite/index`
+      : `https://r.jina.ai/https://www.richbourse.com/common/actualite/index?page=${p}`;
     try {
       const res = await fetch(url, { credentials: 'omit' });
       const txt = await res.text();
