@@ -46,6 +46,11 @@ import GuideApprendrePage from '../pages/GuideApprendrePage';
 import ApprendreArticlesPage from '../pages/ApprendreArticlesPage';
 import ApprendreLexiquePage from '../pages/ApprendreLexiquePage';
 import ApprendreIntermediairesTarifsPage from '../pages/ApprendreIntermediairesTarifsPage';
+import PortefeuilleVirtuelPresentationPage from '../pages/PortefeuilleVirtuelPresentationPage';
+import PortefeuilleVirtuelEspecesEtTitresPage from '../pages/PortefeuilleVirtuelEspecesEtTitresPage';
+import PortefeuilleVirtuelDetectionErreursPage from '../pages/PortefeuilleVirtuelDetectionErreursPage';
+import PortefeuilleVirtuelAnalysePortefeuillePage from '../pages/PortefeuilleVirtuelAnalysePortefeuillePage';
+import PortefeuilleVirtuelAutresDonneesPage from '../pages/PortefeuilleVirtuelAutresDonneesPage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -89,11 +94,11 @@ const AppRouter = () => {
                     <Route path="apprendre/intermediaires-tarifs" element={<ApprendreIntermediairesTarifsPage />} />
                     <Route path="apprendre/liste-societes" element={<PlaceholderPage title="Apprendre - Liste des sociétés cotées" />} />
                     <Route path="apprendre/liste-formateurs" element={<PlaceholderPage title="Apprendre - Liste des formateurs en bourse" />} />
-                    <Route path="portefeuille-virtuel/presentation" element={<PlaceholderPage title="Portefeuille virtuel - Présentation" />} />
-                    <Route path="portefeuille-virtuel/especes-et-titres" element={<PlaceholderPage title="Portefeuille virtuel - Espèces et titres" />} />
-                    <Route path="portefeuille-virtuel/detection-erreurs" element={<PlaceholderPage title="Portefeuille virtuel - Détection des erreurs" />} />
-                    <Route path="portefeuille-virtuel/analyse-portefeuille" element={<PlaceholderPage title="Portefeuille virtuel - Analyse du portefeuille" />} />
-                    <Route path="portefeuille-virtuel/autres-donnees" element={<PlaceholderPage title="Portefeuille virtuel - Autres données du portefeuille" />} />
+                    <Route path="portefeuille-virtuel/presentation" element={<PortefeuilleVirtuelPresentationPage />} />
+                    <Route path="portefeuille-virtuel/especes-et-titres" element={<PortefeuilleVirtuelEspecesEtTitresPage />} />
+                    <Route path="portefeuille-virtuel/detection-erreurs" element={<PortefeuilleVirtuelDetectionErreursPage />} />
+                    <Route path="portefeuille-virtuel/analyse-portefeuille" element={<PortefeuilleVirtuelAnalysePortefeuillePage />} />
+                    <Route path="portefeuille-virtuel/autres-donnees" element={<PortefeuilleVirtuelAutresDonneesPage />} />
                     <Route path="outils/recommandations" element={<PlaceholderPage title="Outils - Recommandations" />} />
                     <Route path="outils/journee-de-cotation" element={<PlaceholderPage title="Outils - Journée de cotation" />} />
                     <Route path="outils/filtrages-societes" element={<PlaceholderPage title="Outils - Filtrages des sociétés" />} />
