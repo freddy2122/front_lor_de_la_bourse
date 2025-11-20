@@ -33,7 +33,7 @@ const AuthLayout = () => {
           </div>
 
           {/* --- Colonne de Droite (Formulaire) --- */}
-          <div className="lg:w-1/2 p-8 md:p-12 flex items-center justify-center">
+          <div className="lg:w-1/2  md:p-12 flex items-center justify-center">
             <div className="w-full max-w-md">
               <Outlet /> {/* C'est ici que LoginPage ou InscriptionPage s'afficheront */}
             </div>

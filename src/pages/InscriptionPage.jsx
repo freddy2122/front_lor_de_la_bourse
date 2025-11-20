@@ -164,9 +164,9 @@ const InscriptionPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 sm:py-10">
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-brand-blue">Ouverture de Compte-Titres</h1>
+    <div className="max-w-4xl mx-auto  ">
+      <div className="text-center mb-4 sm:mb-6">
+        <h1 className="text-2xl font-bold text-brand-blue">Ouverture de Compte-Titres</h1>
         <p className="mt-2 text-gray-600">Un processus simple et sécurisé.</p>
       </div>
 
@@ -190,7 +190,7 @@ const InscriptionPage = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-lg shadow-md p-4 sm:p-6" aria-busy={isLoading}>
+        <form onSubmit={handleSubmit} className="space-y-3 bg-white rounded-lg shadow-md p-3 sm:p-4" aria-busy={isLoading}>
 
         {/* Nom & Prénom */}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -304,9 +304,9 @@ const InscriptionPage = () => {
           </div>
         </div>
 
-        {/* Email & Téléphone */}
+        {/* Téléphone */}
         <div className="w-full">
-          <label className="block text-sm font-bold mb-1">Numéro de Téléphone</label>
+          <label className="block text-sm font-bold mb-1">Numéro de téléphone</label>
           <PhoneInput
             country="bj"
             value={formData.telephone}
@@ -328,9 +328,9 @@ const InscriptionPage = () => {
               if (errors.telephone) setErrors(prev => ({ ...prev, telephone: null }));
             }}
             containerClass="w-full"
-            inputClass={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-brand-gold ${errors.telephone ? 'border-red-500' : 'border-gray-300'
+            inputClass={`w-full h-10 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-brand-gold ${errors.telephone ? 'border-red-500' : 'border-gray-300'
               }`}
-            buttonClass="rounded-l-md"
+            buttonClass="rounded-l-md !h-10"
             isValid={(value, country) => {
               // Validation de longueur minimale/maximum (8-15 chiffres en tout, sans +)
               const digits = String(value || '').replace(/\D/g, '');
@@ -338,7 +338,7 @@ const InscriptionPage = () => {
             }}
           />
           <p className="text-xs text-gray-500 mt-1">
-            Format attendu: +{phoneCountry.dialCode} suivi du numéro. Exemple: +{phoneCountry.dialCode} 12345678
+            Format attendu : +{phoneCountry.dialCode} suivi du numéro. Exemple : +{phoneCountry.dialCode} 12345678
           </p>
           {errors.telephone && <p className="text-xs text-red-600 mt-1">{errors.telephone[0]}</p>}
         </div>
