@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { fetchQuotesRealtime } from '../api/marketService';
 import { Skeleton } from '../components/common/Skeleton';
@@ -11,7 +11,6 @@ const ActionsPage = () => {
   const [meta, setMeta] = useState({ page: 1, per_page: 20, total: 0, last_page: 1 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const pollIdRef = useRef(null);
 
   const params = useMemo(() => ({ q, page, per_page: perPage }), [q, page, perPage]);
 
@@ -38,27 +37,10 @@ const ActionsPage = () => {
 
     load();
 
-    // Polling simple toutes les 5s sur la page 1
-    clearInterval(pollIdRef.current);
-    if (page === 1) {
-      pollIdRef.current = setInterval(() => {
-        if (!mounted) return;
-        fetchQuotesRealtime({ q, page: 1, per_page: perPage })
-          .then((res) => {
-            const data = res?.data ?? [];
-            const m = res?.meta ?? { page: 1, per_page: perPage, total: data.length, last_page: 1 };
-            setItems(data);
-            setMeta(m);
-          })
-          .catch(() => {});
-      }, 5000);
-    }
-
     return () => {
       mounted = false;
-      clearInterval(pollIdRef.current);
     };
-  }, [params, q, page, perPage]);
+  }, [params]);
 
   return (
     <div className="bg-white py-10 md:py-16">

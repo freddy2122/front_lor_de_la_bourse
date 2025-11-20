@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { fetchIndices } from '../api/marketService';
 import { Skeleton } from '../components/common/Skeleton';
@@ -7,7 +7,6 @@ const IndicesPage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const pollIdRef = useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -31,21 +30,8 @@ const IndicesPage = () => {
 
     load();
 
-    // Polling léger toutes les 30s pour rafraîchir les indices
-    clearInterval(pollIdRef.current);
-    pollIdRef.current = setInterval(() => {
-      if (!mounted) return;
-      fetchIndices()
-        .then((res) => {
-          const data = Array.isArray(res) ? res : [];
-          setItems(data);
-        })
-        .catch(() => {});
-    }, 30000);
-
     return () => {
       mounted = false;
-      clearInterval(pollIdRef.current);
     };
   }, []);
 
