@@ -20,7 +20,10 @@ const DesktopMenu = () => {
   const topClass = 'relative font-medium tracking-wide text-white hover:text-brand-gold transition-colors duration-300';
   const menuWrap = 'relative group';
   const dropdown = ' bg-white text-brand-blue rounded-lg shadow-lg py-3 w-full h-full mt-6';
-  const item = 'block px-4 py-2 hover:bg-brand-cream hover:text-brand-blue';
+  const item = ({ isActive }) =>
+    `block px-4 py-2 hover:bg-brand-cream hover:text-brand-blue ${
+      isActive ? 'bg-brand-cream font-semibold text-brand-blue' : ''
+    }`;
 
   return (
     <nav className="hidden md:flex flex-row items-center space-x-6">

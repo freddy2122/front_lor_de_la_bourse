@@ -66,6 +66,9 @@ import DonneesDividendesHistoriquesPage from '../pages/DonneesDividendesHistoriq
 import DonneesRapportsActivitePage from '../pages/DonneesRapportsActivitePage';
 import DonneesRatiosParSocietePage from '../pages/DonneesRatiosParSocietePage';
 import DonneesRatiosParSecteurPage from '../pages/DonneesRatiosParSecteurPage';
+import ForumPage from '../pages/ForumPage';
+import PremiumPage from '../pages/PremiumPage';
+import RechercherPage from '../pages/RechercherPage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -126,9 +129,9 @@ const AppRouter = () => {
                     <Route path="donnees/rapports-activite" element={<DonneesRapportsActivitePage />} />
                     <Route path="donnees/ratios-par-societe" element={<DonneesRatiosParSocietePage />} />
                     <Route path="donnees/ratios-par-secteur" element={<DonneesRatiosParSecteurPage />} />
-                    <Route path="forum" element={<PlaceholderPage title="Forum" />} />
-                    <Route path="premium" element={<PlaceholderPage title="Premium" />} />
-                    <Route path="rechercher" element={<PlaceholderPage title="Rechercher" />} />
+                    <Route path="forum" element={<ForumPage />} />
+                    <Route path="premium" element={<PremiumPage />} />
+                    <Route path="rechercher" element={<RechercherPage />} />
                 </Route>
 
                 {/* --- GROUPE 2 : Auth --- */}
