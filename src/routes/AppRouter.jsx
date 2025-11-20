@@ -39,6 +39,9 @@ import AnalysesDividendesPage from '../pages/AnalysesDividendesPage';
 import AnalysesComparaisonsPage from '../pages/AnalysesComparaisonsPage';
 import AnalysesAnalyseTechniquePage from '../pages/AnalysesAnalyseTechniquePage';
 import AnalysesIndicesBoursiersPage from '../pages/AnalysesIndicesBoursiersPage';
+import AnalysesPrevisionsBoursieresPage from '../pages/AnalysesPrevisionsBoursieresPage';
+import AnalysesNotationsFinancieresPage from '../pages/AnalysesNotationsFinancieresPage';
+import AnalysesAutresOutilsAnalysePage from '../pages/AnalysesAutresOutilsAnalysePage';
 import GuideApprendrePage from '../pages/GuideApprendrePage';
 import ApprendreArticlesPage from '../pages/ApprendreArticlesPage';
 import ApprendreLexiquePage from '../pages/ApprendreLexiquePage';
@@ -76,9 +79,9 @@ const AppRouter = () => {
                     <Route path="analyses/dividendes" element={<AnalysesDividendesPage />} />
                     <Route path="analyses/comparaisons" element={<AnalysesComparaisonsPage />} />
                     <Route path="analyses/indices-boursiers" element={<AnalysesIndicesBoursiersPage />} />
-                    <Route path="analyses/previsions-boursieres" element={<PlaceholderPage title="Analyses - Prévisions boursières" />} />
-                    <Route path="analyses/notations-financieres" element={<PlaceholderPage title="Analyses - Notations financières" />} />
-                    <Route path="analyses/autres-outils-analyse" element={<PlaceholderPage title="Analyses - Autres outils d'analyse" />} />
+                    <Route path="analyses/previsions-boursieres" element={<AnalysesPrevisionsBoursieresPage />} />
+                    <Route path="analyses/notations-financieres" element={<AnalysesNotationsFinancieresPage />} />
+                    <Route path="analyses/autres-outils-analyse" element={<AnalysesAutresOutilsAnalysePage />} />
                     <Route path="apprendre/articles" element={<ApprendreArticlesPage />} />
                     <Route path="apprendre/guide" element={<GuideApprendrePage />} />
                     <Route path="apprendre/quiz" element={<PlaceholderPage title="Apprendre - Quiz" />} />
