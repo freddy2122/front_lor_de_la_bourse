@@ -48,6 +48,7 @@ import ApprendreLexiquePage from '../pages/ApprendreLexiquePage';
 import ApprendreIntermediairesTarifsPage from '../pages/ApprendreIntermediairesTarifsPage';
 import ApprendreQuizPage from '../pages/ApprendreQuizPage';
 import ApprendreListeSocietesPage from '../pages/ApprendreListeSocietesPage';
+import ApprendreListeFormateursPage from '../pages/ApprendreListeFormateursPage';
 import PortefeuilleVirtuelPresentationPage from '../pages/PortefeuilleVirtuelPresentationPage';
 import OutilsRecommandationsPage from '../pages/OutilsRecommandationsPage';
 import OutilsJourneeDeCotationPage from '../pages/OutilsJourneeDeCotationPage';
@@ -107,7 +108,7 @@ const AppRouter = () => {
                     <Route path="apprendre/lexique" element={<ApprendreLexiquePage />} />
                     <Route path="apprendre/intermediaires-tarifs" element={<ApprendreIntermediairesTarifsPage />} />
                     <Route path="apprendre/liste-societes" element={<ApprendreListeSocietesPage />} />
-                    <Route path="apprendre/liste-formateurs" element={<PlaceholderPage title="Apprendre - Liste des formateurs en bourse" />} />
+                    <Route path="apprendre/liste-formateurs" element={<ApprendreListeFormateursPage />} />
                     <Route path="portefeuille-virtuel/presentation" element={<PortefeuilleVirtuelPresentationPage />} />
                     <Route path="portefeuille-virtuel/especes-et-titres" element={<PortefeuilleVirtuelEspecesEtTitresPage />} />
                     <Route path="portefeuille-virtuel/detection-erreurs" element={<PortefeuilleVirtuelDetectionErreursPage />} />
