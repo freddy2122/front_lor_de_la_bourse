@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // Correction 1: Importer useState
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { LogIn } from 'lucide-react';
+import { LogIn, Eye, EyeOff } from 'lucide-react';
 import apiClient from '../api/apiClient'; // Assurez-vous que ce chemin est correct
 import { Skeleton, SkeletonText } from '../components/common/Skeleton';
 
@@ -13,6 +13,7 @@ const LoginPage = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setCredentials({
@@ -57,7 +58,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
+    <div className="max-w-md mx-auto px-4 py-8 sm:px-6 sm:py-10">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold font-display text-brand-blue">Accéder à votre compte</h1>
         <p className="mt-2 text-gray-600">Heureux de vous revoir !</p>
@@ -92,16 +93,26 @@ const LoginPage = () => {
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-bold text-gray-700 mb-1">Mot de passe</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password"
-              value={credentials.password} // Lier la valeur à l'état
-              onChange={handleChange} 
-              placeholder="••••••••" 
-              required 
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold" 
-            />
+            <div className="relative">
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                id="password" 
+                name="password"
+                value={credentials.password} // Lier la valeur à l'état
+                onChange={handleChange} 
+                placeholder="••••••••" 
+                required 
+                className="w-full pr-11 px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold" 
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           {/* Affichage de l'erreur */}
@@ -131,16 +142,12 @@ const LoginPage = () => {
         </form>
       </div>
 
-      {/* Correction: Le lien d'inscription a été retiré conformément à la logique SGI */}
-      {/* Si vous voulez le garder pour une raison, décommentez les lignes ci-dessous */}
-      {/*
-      <p className="mt-8 text-center text-sm text-gray-600">
+      <p className="mt-6 text-center text-sm text-gray-600">
         Pas encore de compte ?{' '}
-        <NavLink to="/ouvrir-un-compte-formulaire" className="font-bold text-brand-blue hover:text-brand-gold">
-          Ouvrez-en un ici
+        <NavLink to="/inscription" className="font-bold text-brand-blue hover:text-brand-gold">
+          Inscrivez-vous ici
         </NavLink>
       </p>
-      */}
     </div>
   );
 };

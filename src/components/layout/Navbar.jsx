@@ -153,7 +153,16 @@ const MobileMenu = ({ isOpen, setIsOpen }) => {
       {open[key] && (
         <div className="flex flex-col gap-2 px-8 pb-3">
           {links.map(([to, text]) => (
-            <NavLink key={to} to={to} onClick={() => setIsOpen(false)} className="text-white/90 hover:text-brand-gold text-lg">
+            <NavLink
+              key={to}
+              to={to}
+              onClick={() => setIsOpen(false)}
+              className={({ isActive }) =>
+                `text-lg ${
+                  isActive ? 'text-brand-gold font-semibold' : 'text-white/90 hover:text-brand-gold'
+                }`
+              }
+            >
               {text}
             </NavLink>
           ))}

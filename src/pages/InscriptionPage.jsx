@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import apiClient from '../api/apiClient';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -164,7 +164,7 @@ const InscriptionPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 sm:py-10">
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold text-brand-blue">Ouverture de Compte-Titres</h1>
         <p className="mt-2 text-gray-600">Un processus simple et sécurisé.</p>
@@ -190,7 +190,7 @@ const InscriptionPage = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4" aria-busy={isLoading}>
+        <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-lg shadow-md p-4 sm:p-6" aria-busy={isLoading}>
 
         {/* Nom & Prénom */}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -352,6 +352,13 @@ const InscriptionPage = () => {
         >
           {isLoading ? 'Envoi en cours...' : 'Soumettre la demande'}
         </button>
+
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Vous avez déjà un compte ?{' '}
+          <NavLink to="/login" className="font-bold text-brand-blue hover:text-brand-gold">
+            Connectez-vous
+          </NavLink>
+        </p>
 
         {errors.general && <p className="text-red-600 text-center mt-2">{errors.general}</p>}
       </form>
