@@ -28,8 +28,12 @@ import DemandeSoumisePage from '../pages/DemandeSoumisePage';
 import UnauthorizedPage from '../pages/UnauthorizedPage';
 import Logout from '../pages/Logout';
 import PlaceholderPage from '../pages/PlaceholderPage';
+import PalmaresHebdoPage from '../pages/PalmaresHebdoPage';
 import PublicationsOfficiellesPage from '../pages/PublicationsOfficiellesPage';
 import ActualitesPage from '../pages/ActualitesPage';
+import ActualiteDetailPage from '../pages/ActualiteDetailPage';
+import ActionsPage from '../pages/ActionsPage';
+import IndicesPage from '../pages/IndicesPage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -54,9 +58,10 @@ const AppRouter = () => {
                     <Route path="action/:ticker" element={<ActionDetailPage />} />
                     <Route path="marches/publications-officielles" element={<PublicationsOfficiellesPage />} />
                     <Route path="marches/actualites" element={<ActualitesPage />} />
-                    <Route path="marches/actions" element={<PlaceholderPage title="Marchés - Actions" />} />
-                    <Route path="marches/indices" element={<PlaceholderPage title="Marchés - Indices" />} />
-                    <Route path="marches/palmares-hebdomadaires" element={<PlaceholderPage title="Marchés - Palmarès hebdomadaires" />} />
+                    <Route path="marches/actualites/:slug" element={<ActualiteDetailPage />} />
+                    <Route path="marches/actions" element={<ActionsPage />} />
+                    <Route path="marches/indices" element={<IndicesPage />} />
+                    <Route path="marches/palmares-hebdomadaires" element={<PalmaresHebdoPage />} />
                     <Route path="analyses/analyse-graphique" element={<PlaceholderPage title="Analyses - Analyse graphique" />} />
                     <Route path="analyses/analyse-technique" element={<PlaceholderPage title="Analyses - Analyse technique" />} />
                     <Route path="analyses/dividendes" element={<PlaceholderPage title="Analyses - Dividendes" />} />

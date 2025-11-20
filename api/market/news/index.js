@@ -1,12 +1,5 @@
 export const config = { runtime: 'edge' };
 
-function toISODate(raw) {
-  if (!raw) return '';
-  const m = raw.match(/(\d{2})-(\d{2})-(\d{4})/);
-  if (m) return `${m[3]}-${m[2]}-${m[1]}`;
-  return '';
-}
-
 function applyFilters(list, { q = '' }) {
   if (!q) return list;
   const k = q.toLowerCase();
@@ -26,19 +19,27 @@ async function fetchNewsPages({ pages = 2 } = {}) {
   const all = [];
   for (let p = 1; p <= Math.max(1, pages); p++) {
     const url = p === 1
-      ? 'https://www.richbourse.com/common/news/index'
-      : `https://www.richbourse.com/common/news/index?page=${p}`;
+      ? 'https://r.jina.ai/https://www.richbourse.com/common/news/index'
+      : `https://r.jina.ai/https://www.richbourse.com/common/news/index?page=${p}`;
     try {
-      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-      const html = await res.text();
-      const re = /href="(\/common\/news\/details\/[^\"]+)"[^>]*>([^<]+)<\/a>/g;
+      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, cache: 'no-store' });
+      const txt = await res.text();
+      // r.jina.ai renvoie du Markdown: [Titre](https://www.richbourse.com/common/news/details/..)
+      // ou [Titre](https://www.richbourse.com/common/apprendre/article/YYYY-MM-DD-...)
+      const re = /\[([^\]]+?)\]\((https?:\/\/www\.richbourse\.com\/(?:common\/news\/details|common\/apprendre\/article)\/[^)]+)\)/g;
       let m;
-      while ((m = re.exec(html))) {
-        const path = m[1];
-        const text = (m[2] || '').trim();
-        if (!/\/common\/news\/details\//.test(path)) continue;
-        const link = `https://www.richbourse.com${path}`;
-        const d = toISODate(path);
+      while ((m = re.exec(txt))) {
+        const text = (m[1] || '').trim();
+        const link = m[2];
+        // Essayer d'extraire YYYY-MM-DD ou DD-MM-YYYY depuis l'URL
+        let d = '';
+        let m1 = link.match(/\/(\d{4})-(\d{2})-(\d{2})-/); // YYYY-MM-DD
+        if (m1) {
+          d = `${m1[1]}-${m1[2]}-${m1[3]}`;
+        } else {
+          const m2 = link.match(/\/(\d{2})-(\d{2})-(\d{4})-/); // DD-MM-YYYY
+          if (m2) d = `${m2[3]}-${m2[2]}-${m2[1]}`;
+        }
         const parts = text.split(' : ');
         const company = (parts.length > 1 ? parts[0] : '').trim();
         const title = (parts.length > 1 ? parts.slice(1).join(' : ') : text).trim();

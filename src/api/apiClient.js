@@ -1,18 +1,9 @@
 import axios from 'axios';
 import { navigateTo } from '../routes/navigation';
 
-// Instance Axios globale
-let resolvedBase = import.meta.env.VITE_API_BASE_URL;
-if (!resolvedBase) {
-  if (import.meta.env.PROD && typeof window !== 'undefined' && window.location) {
-    resolvedBase = '/api'; // ✅ Vercel Functions en production
-  } else {
-    resolvedBase = 'http://localhost:8000/api'; // ✅ backend local en dev
-  }
-}
-
+// Instance Axios globale — on pointe uniquement vers l’API Laravel via VITE_API_BASE_URL
 const apiClient = axios.create({
-  baseURL: resolvedBase,
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

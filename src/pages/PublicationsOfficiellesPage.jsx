@@ -10,6 +10,7 @@ const typeOptions = [
   { value: 'rapport', label: 'Rapports' },
   { value: 'avis', label: 'Avis' },
   { value: 'dividende', label: 'Dividendes' },
+  { value: 'news_release', label: 'News releases BRVM' },
 ];
 
 const PublicationsOfficiellesPage = () => {

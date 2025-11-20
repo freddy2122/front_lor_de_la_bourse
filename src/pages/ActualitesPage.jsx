@@ -149,7 +149,12 @@ const ActualitesPage = () => {
                     <div className="col-span-12 md:col-span-2 font-semibold text-brand-blue">{it.company}</div>
                     <div className="col-span-12 md:col-span-7">{it.title}</div>
                     <div className="col-span-12 md:col-span-1 text-right">
-                      <a href={it.url || '#'} target="_blank" rel="noreferrer" className="text-brand-gold font-bold hover:underline">Ouvrir</a>
+                      <NavLink
+                        to={`/marches/actualites/${encodeURIComponent((it.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'actualite')}` + `?id=${encodeURIComponent(it.id)}`}
+                        className="text-brand-gold font-bold hover:underline"
+                      >
+                        Ouvrir
+                      </NavLink>
                     </div>
                   </div>
                 </li>

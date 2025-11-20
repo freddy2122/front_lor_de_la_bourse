@@ -109,7 +109,34 @@ export async function fetchMarketSummary() {
   }
 }
 
-export default { fetchTopMovers, fetchIndices, fetchQuotesList, fetchMarketSummary };
+export async function fetchQuotesRealtime({ q = '', page = 1, per_page = 50 } = {}) {
+  try {
+    // On récupère la liste des cours BRVM via l’endpoint Laravel /market/quotes-list
+    const res = await apiClient.get('/market/quotes-list', {
+      params: { q, page, per_page },
+    });
+    const arr = Array.isArray(res.data) ? res.data : [];
+    const total = arr.length;
+    const last_page = Math.max(1, Math.ceil(total / per_page));
+    const p = Math.min(Math.max(1, page), last_page);
+    const start = (p - 1) * per_page;
+    const data = arr.slice(start, start + per_page);
+    return { data, meta: { page: p, per_page, total, last_page } };
+  } catch (_) {
+    return { data: [], meta: { page: 1, per_page, total: 0, last_page: 1 } };
+  }
+}
+
+export async function fetchDailyPalmares() {
+  try {
+    const res = await apiClient.get('/market/palmares-daily');
+    return res.data || { gainers: [], losers: [], volumes: [], period: 'daily' };
+  } catch (_) {
+    return { gainers: [], losers: [], volumes: [], period: 'daily' };
+  }
+}
+
+export default { fetchTopMovers, fetchIndices, fetchQuotesList, fetchMarketSummary, fetchQuotesRealtime, fetchDailyPalmares };
 
 // --- Sociétés cotées ---
 export async function fetchCompanies({ q = '', sector = '', country = '', page = 1, per_page = 20 } = {}) {

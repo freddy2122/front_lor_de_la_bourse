@@ -63,13 +63,20 @@ async function fetchRichBourseNewsPages({ pages = 1 } = {}) {
     try {
       const res = await fetch(url, { credentials: 'omit' });
       const txt = await res.text();
-      const re = /\[([^\]]+?)\]\((https?:\/\/www\.richbourse\.com\/common\/news\/details\/[^)]+)\)/g;
+      const re = /\[([^\]]+?)\]\((https?:\/\/www\.richbourse\.com\/(?:common\/news\/details|common\/apprendre\/article)\/[^)]+)\)/g;
       let m;
       while ((m = re.exec(txt))) {
         const fullTitle = (m[1] || '').trim();
         const link = m[2];
-        const dm = link.match(/\/details\/(\d{2})-(\d{2})-(\d{4})-/);
-        const date = dm ? `${dm[3]}-${dm[2]}-${dm[1]}` : '';
+        // Extraire YYYY-MM-DD ou DD-MM-YYYY de l'URL
+        let date = '';
+        let m1 = link.match(/\/(\d{4})-(\d{2})-(\d{2})-/); // YYYY-MM-DD
+        if (m1) {
+          date = `${m1[1]}-${m1[2]}-${m1[3]}`;
+        } else {
+          const m2 = link.match(/\/(\d{2})-(\d{2})-(\d{4})-/); // DD-MM-YYYY
+          if (m2) date = `${m2[3]}-${m2[2]}-${m2[1]}`;
+        }
         const parts = fullTitle.split(' : ');
         const company = (parts.length > 1 ? parts[0] : '').trim();
         const title = (parts.length > 1 ? parts.slice(1).join(' : ') : fullTitle).trim();
@@ -93,6 +100,28 @@ export async function fetchNews({ q = '', page = 1, per_page = 10 } = {}) {
   const host = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : '';
   const isProdHost = !!(host && !/^localhost$|^127\.(?:\d+\.){2}\d+$/.test(host));
   const isBackendLocalOrMissing = !baseURL || /^http:\/\/localhost(?::\d+)?\//i.test(baseURL);
+
+  // En développement/local : si on pointe vers une API Laravel locale (localhost ou 127.0.0.1),
+  // on utilise uniquement l'API backend pour plus de rapidité et on ne scrape pas RichBourse côté front.
+  const isLocalApi = baseURL.startsWith('http://127.0.0.1') || baseURL.startsWith('http://localhost');
+  if (isLocalApi) {
+    try {
+      // En local, on consomme les actualités BRVM directement depuis l'API Laravel.
+      const res = await apiClient.get('/market/brvm-news', { params: { q, page, per_page } });
+      const body = res?.data;
+      let list = [];
+      if (Array.isArray(body)) list = body.map(normalizeNews);
+      else if (body && Array.isArray(body.data)) list = body.data.map(normalizeNews);
+      else if (body && body.items && Array.isArray(body.items)) list = body.items.map(normalizeNews);
+      else {
+        const arr = Object.values(body || {}).filter((v) => typeof v === 'object' && v);
+        if (arr.length && Array.isArray(arr[0])) list = arr[0].map(normalizeNews);
+      }
+      return paginate(applyFilters(list, { q }), page, per_page);
+    } catch (_) {
+      return paginate([], page, per_page);
+    }
+  }
 
   const primaryPromise = (async () => {
     try {
@@ -137,4 +166,34 @@ export async function fetchNews({ q = '', page = 1, per_page = 10 } = {}) {
   return paginate(primary, page, per_page);
 }
 
-export default { fetchNews };
+export async function fetchNewsDetail({ id }) {
+  if (!id) return null;
+  try {
+    const baseURL = (apiClient?.defaults?.baseURL) ? String(apiClient.defaults.baseURL) : '';
+    const isLocalApi = baseURL.startsWith('http://127.0.0.1') || baseURL.startsWith('http://localhost');
+
+    // En local, on pointe vers l'endpoint BRVM dédié.
+    const path = isLocalApi
+      ? `/market/brvm-news/${encodeURIComponent(id)}`
+      : `/market/news/${encodeURIComponent(id)}`;
+
+    const res = await apiClient.get(path);
+    const body = res?.data || {};
+
+    const base = normalizeNews(body);
+    const contentHtml = body.content_html || body.contentHtml || body.html || null;
+    const contentText = body.content_text || body.contentText || body.text || body.body || null;
+    const url = body.url || body.link || base.url || null;
+
+    return {
+      ...base,
+      contentHtml,
+      contentText,
+      url,
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
+export default { fetchNews, fetchNewsDetail };
