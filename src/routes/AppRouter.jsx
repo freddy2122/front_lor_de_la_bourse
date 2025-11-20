@@ -54,6 +54,7 @@ import PortefeuilleVirtuelAutresDonneesPage from '../pages/PortefeuilleVirtuelAu
 import DonneesDividendesHistoriquesPage from '../pages/DonneesDividendesHistoriquesPage';
 import DonneesRapportsActivitePage from '../pages/DonneesRapportsActivitePage';
 import DonneesRatiosParSocietePage from '../pages/DonneesRatiosParSocietePage';
+import DonneesRatiosParSecteurPage from '../pages/DonneesRatiosParSecteurPage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -113,7 +114,7 @@ const AppRouter = () => {
                     <Route path="donnees/dividendes-historiques" element={<DonneesDividendesHistoriquesPage />} />
                     <Route path="donnees/rapports-activite" element={<DonneesRapportsActivitePage />} />
                     <Route path="donnees/ratios-par-societe" element={<DonneesRatiosParSocietePage />} />
-                    <Route path="donnees/ratios-par-secteur" element={<PlaceholderPage title="Données - Ratios par secteur (PER, PBR)" />} />
+                    <Route path="donnees/ratios-par-secteur" element={<DonneesRatiosParSecteurPage />} />
                     <Route path="forum" element={<PlaceholderPage title="Forum" />} />
                     <Route path="premium" element={<PlaceholderPage title="Premium" />} />
                     <Route path="rechercher" element={<PlaceholderPage title="Rechercher" />} />
