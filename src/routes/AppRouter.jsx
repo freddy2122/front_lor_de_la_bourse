@@ -53,6 +53,8 @@ import OutilsFiltragesSocietesPage from '../pages/OutilsFiltragesSocietesPage';
 import OutilsClassementsSocietesPage from '../pages/OutilsClassementsSocietesPage';
 import OutilsComparaisonsSocietesPage from '../pages/OutilsComparaisonsSocietesPage';
 import OutilsAlertesFranchissementSeuilPage from '../pages/OutilsAlertesFranchissementSeuilPage';
+import OutilsAlertesPublicationsOfficiellesPage from '../pages/OutilsAlertesPublicationsOfficiellesPage';
+import OutilsAutresOutilsAnalysePage from '../pages/OutilsAutresOutilsAnalysePage';
 import PortefeuilleVirtuelEspecesEtTitresPage from '../pages/PortefeuilleVirtuelEspecesEtTitresPage';
 import PortefeuilleVirtuelDetectionErreursPage from '../pages/PortefeuilleVirtuelDetectionErreursPage';
 import PortefeuilleVirtuelAnalysePortefeuillePage from '../pages/PortefeuilleVirtuelAnalysePortefeuillePage';
@@ -115,8 +117,8 @@ const AppRouter = () => {
                     <Route path="outils/classements-societes" element={<OutilsClassementsSocietesPage />} />
                     <Route path="outils/comparaisons-societes" element={<OutilsComparaisonsSocietesPage />} />
                     <Route path="outils/alertes-franchissement-seuil" element={<OutilsAlertesFranchissementSeuilPage />} />
-                    <Route path="outils/alertes-publications-officielles" element={<PlaceholderPage title="Outils - Alertes publications officielles" />} />
-                    <Route path="outils/autres-outils-analyse" element={<PlaceholderPage title="Outils - Autres outils d'analyse" />} />
+                    <Route path="outils/alertes-publications-officielles" element={<OutilsAlertesPublicationsOfficiellesPage />} />
+                    <Route path="outils/autres-outils-analyse" element={<OutilsAutresOutilsAnalysePage />} />
                     <Route path="donnees/dividendes-historiques" element={<DonneesDividendesHistoriquesPage />} />
                     <Route path="donnees/rapports-activite" element={<DonneesRapportsActivitePage />} />
                     <Route path="donnees/ratios-par-societe" element={<DonneesRatiosParSocietePage />} />
