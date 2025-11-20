@@ -47,6 +47,8 @@ import ApprendreArticlesPage from '../pages/ApprendreArticlesPage';
 import ApprendreLexiquePage from '../pages/ApprendreLexiquePage';
 import ApprendreIntermediairesTarifsPage from '../pages/ApprendreIntermediairesTarifsPage';
 import PortefeuilleVirtuelPresentationPage from '../pages/PortefeuilleVirtuelPresentationPage';
+import OutilsRecommandationsPage from '../pages/OutilsRecommandationsPage';
+import OutilsJourneeDeCotationPage from '../pages/OutilsJourneeDeCotationPage';
 import PortefeuilleVirtuelEspecesEtTitresPage from '../pages/PortefeuilleVirtuelEspecesEtTitresPage';
 import PortefeuilleVirtuelDetectionErreursPage from '../pages/PortefeuilleVirtuelDetectionErreursPage';
 import PortefeuilleVirtuelAnalysePortefeuillePage from '../pages/PortefeuilleVirtuelAnalysePortefeuillePage';
@@ -103,8 +105,8 @@ const AppRouter = () => {
                     <Route path="portefeuille-virtuel/detection-erreurs" element={<PortefeuilleVirtuelDetectionErreursPage />} />
                     <Route path="portefeuille-virtuel/analyse-portefeuille" element={<PortefeuilleVirtuelAnalysePortefeuillePage />} />
                     <Route path="portefeuille-virtuel/autres-donnees" element={<PortefeuilleVirtuelAutresDonneesPage />} />
-                    <Route path="outils/recommandations" element={<PlaceholderPage title="Outils - Recommandations" />} />
-                    <Route path="outils/journee-de-cotation" element={<PlaceholderPage title="Outils - Journée de cotation" />} />
+                    <Route path="outils/recommandations" element={<OutilsRecommandationsPage />} />
+                    <Route path="outils/journee-de-cotation" element={<OutilsJourneeDeCotationPage />} />
                     <Route path="outils/filtrages-societes" element={<PlaceholderPage title="Outils - Filtrages des sociétés" />} />
                     <Route path="outils/classements-societes" element={<PlaceholderPage title="Outils - Classements des sociétés" />} />
                     <Route path="outils/comparaisons-societes" element={<PlaceholderPage title="Outils - Comparaisons des sociétés" />} />
