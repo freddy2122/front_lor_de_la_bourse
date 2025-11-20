@@ -37,6 +37,8 @@ import IndicesPage from '../pages/IndicesPage';
 import AnalyseGraphiquePage from '../pages/AnalyseGraphiquePage';
 import AnalysesDividendesPage from '../pages/AnalysesDividendesPage';
 import AnalysesComparaisonsPage from '../pages/AnalysesComparaisonsPage';
+import AnalysesAnalyseTechniquePage from '../pages/AnalysesAnalyseTechniquePage';
+import AnalysesIndicesBoursiersPage from '../pages/AnalysesIndicesBoursiersPage';
 import GuideApprendrePage from '../pages/GuideApprendrePage';
 import ApprendreArticlesPage from '../pages/ApprendreArticlesPage';
 import ApprendreLexiquePage from '../pages/ApprendreLexiquePage';
@@ -70,10 +72,10 @@ const AppRouter = () => {
                     <Route path="marches/indices" element={<IndicesPage />} />
                     <Route path="marches/palmares-hebdomadaires" element={<PalmaresHebdoPage />} />
                     <Route path="analyses/analyse-graphique" element={<AnalyseGraphiquePage />} />
-                    <Route path="analyses/analyse-technique" element={<PlaceholderPage title="Analyses - Analyse technique" />} />
+                    <Route path="analyses/analyse-technique" element={<AnalysesAnalyseTechniquePage />} />
                     <Route path="analyses/dividendes" element={<AnalysesDividendesPage />} />
                     <Route path="analyses/comparaisons" element={<AnalysesComparaisonsPage />} />
-                    <Route path="analyses/indices-boursiers" element={<PlaceholderPage title="Analyses - Indices boursiers" />} />
+                    <Route path="analyses/indices-boursiers" element={<AnalysesIndicesBoursiersPage />} />
                     <Route path="analyses/previsions-boursieres" element={<PlaceholderPage title="Analyses - Prévisions boursières" />} />
                     <Route path="analyses/notations-financieres" element={<PlaceholderPage title="Analyses - Notations financières" />} />
                     <Route path="analyses/autres-outils-analyse" element={<PlaceholderPage title="Analyses - Autres outils d'analyse" />} />
