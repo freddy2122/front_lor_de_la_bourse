@@ -51,6 +51,9 @@ import PortefeuilleVirtuelEspecesEtTitresPage from '../pages/PortefeuilleVirtuel
 import PortefeuilleVirtuelDetectionErreursPage from '../pages/PortefeuilleVirtuelDetectionErreursPage';
 import PortefeuilleVirtuelAnalysePortefeuillePage from '../pages/PortefeuilleVirtuelAnalysePortefeuillePage';
 import PortefeuilleVirtuelAutresDonneesPage from '../pages/PortefeuilleVirtuelAutresDonneesPage';
+import DonneesDividendesHistoriquesPage from '../pages/DonneesDividendesHistoriquesPage';
+import DonneesRapportsActivitePage from '../pages/DonneesRapportsActivitePage';
+import DonneesRatiosParSocietePage from '../pages/DonneesRatiosParSocietePage';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -107,9 +110,9 @@ const AppRouter = () => {
                     <Route path="outils/alertes-franchissement-seuil" element={<PlaceholderPage title="Outils - Alertes franchissement de seuil" />} />
                     <Route path="outils/alertes-publications-officielles" element={<PlaceholderPage title="Outils - Alertes publications officielles" />} />
                     <Route path="outils/autres-outils-analyse" element={<PlaceholderPage title="Outils - Autres outils d'analyse" />} />
-                    <Route path="donnees/dividendes-historiques" element={<PlaceholderPage title="Données - Dividendes historiques" />} />
-                    <Route path="donnees/rapports-activite" element={<PlaceholderPage title="Données - Rapports d'activité" />} />
-                    <Route path="donnees/ratios-par-societe" element={<PlaceholderPage title="Données - Ratios par société (PER, ROE, ...)" />} />
+                    <Route path="donnees/dividendes-historiques" element={<DonneesDividendesHistoriquesPage />} />
+                    <Route path="donnees/rapports-activite" element={<DonneesRapportsActivitePage />} />
+                    <Route path="donnees/ratios-par-societe" element={<DonneesRatiosParSocietePage />} />
                     <Route path="donnees/ratios-par-secteur" element={<PlaceholderPage title="Données - Ratios par secteur (PER, PBR)" />} />
                     <Route path="forum" element={<PlaceholderPage title="Forum" />} />
                     <Route path="premium" element={<PlaceholderPage title="Premium" />} />
