@@ -46,6 +46,8 @@ import GuideApprendrePage from '../pages/GuideApprendrePage';
 import ApprendreArticlesPage from '../pages/ApprendreArticlesPage';
 import ApprendreLexiquePage from '../pages/ApprendreLexiquePage';
 import ApprendreIntermediairesTarifsPage from '../pages/ApprendreIntermediairesTarifsPage';
+import ApprendreQuizPage from '../pages/ApprendreQuizPage';
+import ApprendreListeSocietesPage from '../pages/ApprendreListeSocietesPage';
 import PortefeuilleVirtuelPresentationPage from '../pages/PortefeuilleVirtuelPresentationPage';
 import OutilsRecommandationsPage from '../pages/OutilsRecommandationsPage';
 import OutilsJourneeDeCotationPage from '../pages/OutilsJourneeDeCotationPage';
@@ -101,10 +103,10 @@ const AppRouter = () => {
                     <Route path="analyses/autres-outils-analyse" element={<AnalysesAutresOutilsAnalysePage />} />
                     <Route path="apprendre/articles" element={<ApprendreArticlesPage />} />
                     <Route path="apprendre/guide" element={<GuideApprendrePage />} />
-                    <Route path="apprendre/quiz" element={<PlaceholderPage title="Apprendre - Quiz" />} />
+                    <Route path="apprendre/quiz" element={<ApprendreQuizPage />} />
                     <Route path="apprendre/lexique" element={<ApprendreLexiquePage />} />
                     <Route path="apprendre/intermediaires-tarifs" element={<ApprendreIntermediairesTarifsPage />} />
-                    <Route path="apprendre/liste-societes" element={<PlaceholderPage title="Apprendre - Liste des sociétés cotées" />} />
+                    <Route path="apprendre/liste-societes" element={<ApprendreListeSocietesPage />} />
                     <Route path="apprendre/liste-formateurs" element={<PlaceholderPage title="Apprendre - Liste des formateurs en bourse" />} />
                     <Route path="portefeuille-virtuel/presentation" element={<PortefeuilleVirtuelPresentationPage />} />
                     <Route path="portefeuille-virtuel/especes-et-titres" element={<PortefeuilleVirtuelEspecesEtTitresPage />} />
