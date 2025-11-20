@@ -134,6 +134,11 @@ export async function fetchOfficialPublications({ q = '', symbol = '', type = ''
       { id: '10-11-2025-homologation-sgi-tg', date: '2025-11-10', company: 'SGI TOGO', title: 'Homologation des tarifs', type: 'avis', pdf_url: '#' },
       { id: '05-11-2025-nestle-acc-rapport-s1', date: '2025-11-05', company: 'NESTLE CI', title: "Attestation CAC sur le Rapport d'activités - 1er semestre 2025", type: 'rapport', pdf_url: '#' },
       { id: '05-11-2025-sonatel-cp-t3', date: '2025-11-05', company: 'SONATEL', title: 'Communiqué de presse - Résultats T3 2025', type: 'rapport', pdf_url: '#' },
+      { id: '03-11-2025-nsia-ag-convocation', date: '2025-11-03', company: 'NSIA BANQUE CI', title: "Convocation à l'Assemblée Générale Ordinaire 2025", type: 'avis', pdf_url: '#' },
+      { id: '01-11-2025-sogb-dividende', date: '2025-11-01', company: 'SOGB', title: 'Annonce de mise en paiement du dividende 2024', type: 'dividende', pdf_url: '#' },
+      { id: '28-10-2025-uniwax-rapport-s1', date: '2025-10-28', company: 'UNIWAX', title: "Rapport d'activités - 1er semestre 2025", type: 'rapport', pdf_url: '#' },
+      { id: '25-10-2025-sicable-avis-marche', date: '2025-10-25', company: 'SICABLE', title: 'Avis au marché sur la reprise de cotation', type: 'avis', pdf_url: '#' },
+      { id: '20-10-2025-sgbci-dividende-interimaire', date: '2025-10-20', company: 'SGBCI', title: 'Annonce de dividende intérimaire 2025', type: 'dividende', pdf_url: '#' },
     ];
     const data = applyFilters(mock, { q, symbol, type, from, to });
     return paginate(data, page, per_page);
