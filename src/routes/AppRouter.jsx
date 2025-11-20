@@ -49,6 +49,7 @@ import ApprendreIntermediairesTarifsPage from '../pages/ApprendreIntermediairesT
 import PortefeuilleVirtuelPresentationPage from '../pages/PortefeuilleVirtuelPresentationPage';
 import OutilsRecommandationsPage from '../pages/OutilsRecommandationsPage';
 import OutilsJourneeDeCotationPage from '../pages/OutilsJourneeDeCotationPage';
+import OutilsFiltragesSocietesPage from '../pages/OutilsFiltragesSocietesPage';
 import PortefeuilleVirtuelEspecesEtTitresPage from '../pages/PortefeuilleVirtuelEspecesEtTitresPage';
 import PortefeuilleVirtuelDetectionErreursPage from '../pages/PortefeuilleVirtuelDetectionErreursPage';
 import PortefeuilleVirtuelAnalysePortefeuillePage from '../pages/PortefeuilleVirtuelAnalysePortefeuillePage';
@@ -107,7 +108,7 @@ const AppRouter = () => {
                     <Route path="portefeuille-virtuel/autres-donnees" element={<PortefeuilleVirtuelAutresDonneesPage />} />
                     <Route path="outils/recommandations" element={<OutilsRecommandationsPage />} />
                     <Route path="outils/journee-de-cotation" element={<OutilsJourneeDeCotationPage />} />
-                    <Route path="outils/filtrages-societes" element={<PlaceholderPage title="Outils - Filtrages des sociétés" />} />
+                    <Route path="outils/filtrages-societes" element={<OutilsFiltragesSocietesPage />} />
                     <Route path="outils/classements-societes" element={<PlaceholderPage title="Outils - Classements des sociétés" />} />
                     <Route path="outils/comparaisons-societes" element={<PlaceholderPage title="Outils - Comparaisons des sociétés" />} />
                     <Route path="outils/alertes-franchissement-seuil" element={<PlaceholderPage title="Outils - Alertes franchissement de seuil" />} />
